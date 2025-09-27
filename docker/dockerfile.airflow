@@ -1,1 +1,14 @@
+FROM apache/airflow:2.6.3-python3.11
 
+
+USER root
+RUN pip install --no-cache-dir requests pandas pyspark sqlalchemy psycopg2-binary python-dateutil
+
+
+USER airflow
+COPY dags/ /opt/airflow/dags/
+COPY scripts/ /opt/airflow/scripts/
+COPY spark/ /opt/airflow/spark/
+ENV DATA_RAW_DIR=/opt/airflow/data/raw
+ENV DATA_PROCESSED_DIR=/opt/airflow/data/processed
+RUN mkdir -p $DATA_RAW_DIR $DATA_PROCESSED_DIR
