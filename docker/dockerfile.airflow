@@ -1,9 +1,7 @@
 FROM apache/airflow:2.6.3-python3.11
 
-
 USER root
 RUN pip install --no-cache-dir requests pandas pyspark sqlalchemy psycopg2-binary python-dateutil
-
 
 USER airflow
 COPY dags/ /opt/airflow/dags/
