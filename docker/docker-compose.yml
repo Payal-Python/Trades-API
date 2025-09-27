@@ -1,1 +1,41 @@
+version: '3.8'
+services:
+postgres:
+image: postgres:15
+environment:
+POSTGRES_DB: vulndb
+POSTGRES_USER: postgres
+POSTGRES_PASSWORD: password
+ports:
+- '5432:5432'
+volumes:
+- pgdata:/var/lib/postgresql/data
 
+
+airflow:
+build:
+context: ../
+dockerfile: docker/Dockerfile.airflow
+environment:
+AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
+POSTGRES_URL: postgresql://postgres:password@postgres:5432/vulndb
+depends_on:
+- postgres
+ports:
+- '8080:8080'
+volumes:
+- ./data:/opt/airflow/data
+
+
+spark:
+build:
+context: ../
+dockerfile: docker/Dockerfile.spark
+volumes:
+- ./data:/opt/data
+depends_on:
+- postgres
+
+
+volumes:
+pgdata:
